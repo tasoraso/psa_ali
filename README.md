@@ -8,9 +8,7 @@ psa-hunter/
 ├─ .env                          # ENV-Variablen (PSA_TOKEN, PSA_BASE_URL, REQUESTS_CA_BUNDLE)
 ├─ README.md                     # Doku & How-To
 ├─ requirements.txt              # Python-Abhängigkeiten
-├─ composer.json                 # PHP-Abhängigkeiten
 ├─ hunter_full.py                # Python: Search → URLs → Certs → Validate → SQLite
-├─ psa_public_psacert_cached.php # PHP: PSA-API Cacher/Validator mit SQLite & Logs
 │
 ├─ data/
 │  ├─ queries.txt                # Suchbegriffe (eine Zeile = eine Suche)
@@ -24,14 +22,7 @@ psa-hunter/
 ├─ logs/
 │  ├─ psa_YYYY-MM-DD.log         # PHP/Guzzle Tageslogs (volle Responses, Header etc.)
 │  └─ daily_runner_YYYY-MM-DD.log# PowerShell Runner-Logs
-│
-├─ scripts/
-│  └─ daily_import.ps1           # täglicher Runner (dedupe → import → csv-export)
-│
-└─ tools/
-   ├─ scrape_certs.php           # URLs laden → Cert-Nummern extrahieren → data/certs.txt
-   ├─ discover_and_import.php    # Scrape → Validate (Daily-Cap) → DB
-   └─ dedupe_normalize_certs.php # certs.txt deduplizieren/normalisieren (beschr. mergen)
+└─
 ```
 
 ````markdown
@@ -49,9 +40,6 @@ Ein Toolkit, um PSA-Cert-Nummern aus dem offenen Web zu finden, sie optional geg
 - [Workflows](#workflows)
   - [A) Suchen → URLs → Certs (Python)](#a-suchen--urls--certs-python)
   - [B) Validierung + DB (Python)](#b-validierung--db-python)
-  - [C) PSA-API Cache/Validator (PHP)](#c-psa-api-cachevalidator-php)
-  - [D) Täglicher Runner (PowerShell)](#d-täglicher-runner-powershell)
-  - [E) Dedupe / Normalize (PHP Tool)](#e-dedupe--normalize-php-tool)
 - [Tipps](#tipps)
 - [Troubleshooting](#troubleshooting)
 
@@ -72,19 +60,9 @@ Ein Toolkit, um PSA-Cert-Nummern aus dem offenen Web zu finden, sie optional geg
   - Tageslimit, Max-Age, Sleep, CSV-Export, UTF-8
   - Speichert nur **valide** Antworten (Year 4-stellig, Brand/Subject vorhanden)
 
-- **tools/** (PHP):
-  - `scrape_certs.php`: URLs laden → Certs extrahieren (ohne API)
-  - `discover_and_import.php`: Scrape → Validate → DB mit Daily-Cap
-  - `dedupe_normalize_certs.php`: `certs.txt` deduplizieren, Beschreibungen mergen
-
-- **scripts/daily_import.ps1**:
-  - Dedupe → Import (PHP) → CSV → alles in Tageslog
-
 ## Voraussetzungen
 
 - **Python 3.10+** (unter Windows ok)
-- **PHP 8.1+** (CLI)
-- **Composer**
 - Internetzugang (ggf. Firmen-Proxy/SSL-Inspection beachten)
 
 ## Setup
@@ -96,24 +74,20 @@ mkdir psa-hunter
 cd psa-hunter
 
 # 2) Ordnerstruktur anlegen (oder Repo entpacken)
-mkdir data, db, logs, scripts, tools
+mkdir data, db, logs
 
 # 3) Python-Dependencies
 python -m pip install -r requirements.txt
 # (oder direkt)
 python -m pip install requests beautifulsoup4 python-dotenv certifi
 
-# 4) PHP-Dependencies
-composer install
-# (oder)
-composer require guzzlehttp/guzzle monolog/monolog vlucas/phpdotenv
-
-# 5) .env anlegen (siehe unten)
+# 4) .env anlegen (siehe unten)
 notepad .env
 ````
 
 ```powershell
-# .env benötigt PSA_TOKEN
+# .Tipps PSA_TOKEN
+
 python .\hunter_full.py --validate --daily-cap 80 --sleep-ms 250
 
 
