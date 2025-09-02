@@ -81,7 +81,7 @@ python -m pip install -r requirements.txt
 # (oder direkt)
 python -m pip install requests beautifulsoup4 python-dotenv certifi
 
-# 4) .env anlegen (siehe unten)
+# 4) .env anlegen (umbennen env.env zu .env) unhd editieren
 notepad .env
 ````
 
