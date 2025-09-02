@@ -55,8 +55,6 @@ Ein Toolkit, um PSA-Cert-Nummern aus dem offenen Web zu finden, sie optional geg
 - [Tipps](#tipps)
 - [Troubleshooting](#troubleshooting)
 
----
-
 ## Features
 
 - **hunter_full.py** (Python):
