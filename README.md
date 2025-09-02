@@ -80,8 +80,6 @@ Ein Toolkit, um PSA-Cert-Nummern aus dem offenen Web zu finden, sie optional geg
 - **scripts/daily_import.ps1**:
   - Dedupe → Import (PHP) → CSV → alles in Tageslog
 
----
-
 ## Voraussetzungen
 
 - **Python 3.10+** (unter Windows ok)
@@ -89,8 +87,45 @@ Ein Toolkit, um PSA-Cert-Nummern aus dem offenen Web zu finden, sie optional geg
 - **Composer**
 - Internetzugang (ggf. Firmen-Proxy/SSL-Inspection beachten)
 
----
-
 ## Setup
 
+```powershell
+# 1) Projekt klonen/erstellen
+cd D:\My_Files\ali
+mkdir psa-hunter
+cd psa-hunter
+
+# 2) Ordnerstruktur anlegen (oder Repo entpacken)
+mkdir data, db, logs, scripts, tools
+
+# 3) Python-Dependencies
+python -m pip install -r requirements.txt
+# (oder direkt)
+python -m pip install requests beautifulsoup4 python-dotenv certifi
+
+# 4) PHP-Dependencies
+composer install
+# (oder)
+composer require guzzlehttp/guzzle monolog/monolog vlucas/phpdotenv
+
+# 5) .env anlegen (siehe unten)
+notepad .env
+````
+
+```powershell
+# .env benötigt PSA_TOKEN
+python .\hunter_full.py --validate --daily-cap 80 --sleep-ms 250
+
+
+python hunter_full.py --queries ./data/queries.txt --urls ./data/urls.txt --certs ./data/certs.txt --per-query 50 --max-pages 4 --sleep 1.2 --include-any
+
+
+python .\hunter_full.py --urls .\data\urls.txt --certs .\data\certs.txt --scan-limit-per-url 0 --scan-sleep 0.8 --connect-timeout 8 --read-timeout 25 --retries 2
+
+
+python .\hunter_full.py --queries .\data\queries.txt --urls .\data\urls.txt --certs .\data\certs.txt
+
+
+python .\hunter_full.py --validate --daily-cap 80 --sleep-ms 250
 ```
+
